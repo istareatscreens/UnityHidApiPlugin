@@ -10,6 +10,9 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # libraries
 set(HIDAPI_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../Library/hidapi)
+set(HIDAPI_SOURCES
+    ${HIDAPI_LIB_DIR}/windows/hid.c
+)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../Library/googletest ${CMAKE_CURRENT_BINARY_DIR}/googletest)
 add_subdirectory(${HIDAPI_LIB_DIR} ${CMAKE_CURRENT_BINARY_DIR}/hidapi)
@@ -21,12 +24,15 @@ set(Headers
     ${HIDAPI_LIB_DIR}/hidapi/hidapi.h
 )
 set(Sources ${CMAKE_SOURCE_DIR}/src/AdxIO4ButtonRing.cpp)
-add_library(${This} STATIC ${Sources} ${Headers})
+add_library(${This} STATIC ${Sources} ${Headers} ${HIDAPI_SOURCES})
 
 # Link hidapi
-target_include_directories(${This} PRIVATE ${HIDAPI_LIB_DIR}/hidapi/hidapi)
+target_include_directories(${This} PRIVATE ${HIDAPI_LIB_DIR}/hidapi)
 target_include_directories(${This} PUBLIC ${CMAKE_SOURCE_DIR}/src)
-target_link_libraries(${This} PRIVATE hidapi)
+
+if(WIN32)
+    target_link_libraries(${This} PRIVATE setupapi hid)
+endif()
 
 set_target_properties(${This} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIR}"
