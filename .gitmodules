@@ -1,0 +1,6 @@
+[submodule "Library/hidapi"]
+	path = Library/hidapi
+	url = https://github.com/libusb/hidapi.git
+[submodule "Library/googletest"]
+	path = Library/googletest
+	url = https://github.com/google/googletest.git
