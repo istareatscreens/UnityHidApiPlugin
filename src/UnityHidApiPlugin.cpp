@@ -94,32 +94,28 @@ void UnityHidApiPlugin::readLoop(
             // Read from the HID device into the buffer
             int bytesRead = hid_read(rawDevice, rawBuffer, bufferSize);
 
-            if (bytesRead == bufferSize)
+            if (-1 == bytesRead)
             {
-                // If the data equals previous state no processing required
-                if (0 == std::memcmp(rawBuffer, prevState, bytesRead))
-                {
-                    // prevent infinite loop stuck on zero data returned from device
-                    std::this_thread::sleep_for(std::chrono::milliseconds(5));
-                    continue;
-                }
-
-                std::memcpy(prevState, rawBuffer, bytesRead);
-                dataCallback(rawBuffer, bytesRead);
-            }
-            else if (-1 == bytesRead)
-            {
-                disconnect();
-                eventCallback();
                 break;
             }
+
+            // If the data equals previous state no processing required
+            if (0 == std::memcmp(rawBuffer, prevState, bytesRead))
+            {
+                // prevent blocking
+                std::this_thread::sleep_for(std::chrono::milliseconds(3));
+                continue;
+            }
+
+            std::memcpy(prevState, rawBuffer, bytesRead);
+            dataCallback(rawBuffer, bytesRead);
         }
     }
     catch (...)
     {
-        disconnect();
         eventCallback();
     }
+    disconnect();
 }
 
 bool UnityHidApiPlugin::disconnect()
@@ -135,14 +131,6 @@ bool UnityHidApiPlugin::disconnect()
         }
     }
 
-    try
-    {
-        hid_close(device.get());
-    }
-    catch (...)
-    {
-        // Its ok if it fails here
-    }
     device.reset();
 
     return true;
