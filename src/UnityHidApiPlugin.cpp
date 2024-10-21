@@ -1,8 +1,8 @@
-#include "AdxIO4ButtonRing.h"
+#include "UnityHidApiPlugin.h"
 #include "ConnectionProperties.h"
 #include <iostream>
 
-bool AdxIO4ButtonRing::connect()
+bool UnityHidApiPlugin::connect()
 {
 
     // Attempt to open the HID device using the vendor and product IDs
@@ -55,7 +55,7 @@ bool AdxIO4ButtonRing::connect()
     return true;
 }
 
-void AdxIO4ButtonRing::read(
+void UnityHidApiPlugin::read(
     std::function<void(const uint8_t *, size_t)> dataCallback,
     std::function<void()> errorCallback)
 {
@@ -72,7 +72,7 @@ void AdxIO4ButtonRing::read(
         { readLoop(dataCallback, errorCallback); });
 }
 
-void AdxIO4ButtonRing::readLoop(
+void UnityHidApiPlugin::readLoop(
     std::function<void(const uint8_t *, size_t)> dataCallback,
     std::function<void()> eventCallback)
 {
@@ -122,7 +122,7 @@ void AdxIO4ButtonRing::readLoop(
     }
 }
 
-bool AdxIO4ButtonRing::disconnect()
+bool UnityHidApiPlugin::disconnect()
 {
     if (reading.load())
     {
@@ -148,13 +148,13 @@ bool AdxIO4ButtonRing::disconnect()
     return true;
 }
 
-bool AdxIO4ButtonRing::isConnected()
+bool UnityHidApiPlugin::isConnected()
 {
     std::lock_guard<std::mutex> lock(connectionMutex);
     return reading.load();
 }
 
-AdxIO4ButtonRing::~AdxIO4ButtonRing()
+UnityHidApiPlugin::~UnityHidApiPlugin()
 {
     std::lock_guard<std::mutex> lock(connectionMutex);
     disconnect();

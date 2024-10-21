@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "./../src/AdxIO4ButtonRing.h"
+#include "./../src/UnityHidApiPlugin.h"
 #include "./../src/ConnectionProperties.h"
 #include <gmock/gmock.h>
 
@@ -11,10 +11,10 @@ public:
     MOCK_METHOD(void, OnError, (), ());
 };
 
-TEST(AdxIO4ButtonRingTest, Connect_Success_Disconnect_Success)
+TEST(UnityHidApiPluginTest, Connect_Success_Disconnect_Success)
 {
     ConnectionProperties connectionProperties;
-    AdxIO4ButtonRing obj{connectionProperties.product_id, connectionProperties.vender_id, connectionProperties.buffer_size};
+    UnityHidApiPlugin obj{connectionProperties.product_id, connectionProperties.vender_id, connectionProperties.buffer_size};
     auto result = obj.connect();
     std::this_thread::sleep_for(std::chrono::milliseconds(50)); // Allow some buffer time for the device to initialize
     EXPECT_TRUE(result) << "Expected successful connection to the HID device.";
@@ -23,10 +23,10 @@ TEST(AdxIO4ButtonRingTest, Connect_Success_Disconnect_Success)
     EXPECT_TRUE(result) << "Expect disconnect to be successful";
 }
 
-TEST(AdxIO4ButtonRingTest, Read_ValidData)
+TEST(UnityHidApiPluginTest, Read_ValidData)
 {
     ConnectionProperties connectionProperties;
-    AdxIO4ButtonRing obj{connectionProperties.product_id, connectionProperties.vender_id, connectionProperties.buffer_size};
+    UnityHidApiPlugin obj{connectionProperties.product_id, connectionProperties.vender_id, connectionProperties.buffer_size};
     EXPECT_TRUE(obj.isConnected()) << "Expect device to be disconnected successful";
     EXPECT_TRUE(obj.connect());
 

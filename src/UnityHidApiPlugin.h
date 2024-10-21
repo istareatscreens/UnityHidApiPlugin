@@ -13,10 +13,10 @@
 #include <atomic>
 #include <vector>
 #include <mutex>
-#include "../../Library/hidapi/hidapi/hidapi.h"
+#include "../library/hidapi/hidapi/hidapi.h"
 #include "ConnectionProperties.h"
 
-class DLL_EXPORT AdxIO4ButtonRing
+class DLL_EXPORT UnityHidApiPlugin
 {
 private:
     std::unique_ptr<hid_device, decltype(&hid_close)> device;
@@ -31,7 +31,7 @@ private:
                   std::function<void()> errorCallback);
 
 public:
-    AdxIO4ButtonRing(int vender_id, int product_id, int buffer_size)
+    UnityHidApiPlugin(int vender_id, int product_id, int buffer_size)
         : device(nullptr, hid_close), reading(false),
           connectionProperties{vender_id, product_id, buffer_size}
     {
@@ -39,7 +39,7 @@ public:
         previousState = std::make_unique<uint8_t[]>(buffer_size);
     }
 
-    ~AdxIO4ButtonRing();
+    ~UnityHidApiPlugin();
 
     bool isConnected();
     bool connect();

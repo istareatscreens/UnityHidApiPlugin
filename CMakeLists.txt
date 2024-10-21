@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22.2)
 
-set(This AdxIO4ButtonRing)
+set(This UnityHidApiPlugin)
 
 project(${This} C CXX)
 
@@ -9,21 +9,21 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # libraries
-set(HIDAPI_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../Library/hidapi)
+set(HIDAPI_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/library/hidapi)
 set(HIDAPI_SOURCES
     ${HIDAPI_LIB_DIR}/windows/hid.c
 )
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../Library/googletest ${CMAKE_CURRENT_BINARY_DIR}/googletest)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/library/googletest ${CMAKE_CURRENT_BINARY_DIR}/googletest)
 add_subdirectory(${HIDAPI_LIB_DIR} ${CMAKE_CURRENT_BINARY_DIR}/hidapi)
 
 # Add Dependencies
 set(Headers
-    ${CMAKE_SOURCE_DIR}/src/AdxIO4ButtonRing.h
+    ${CMAKE_SOURCE_DIR}/src/UnityHidApiPlugin.h
     ${CMAKE_SOURCE_DIR}/src/ConnectionProperties.h
     ${HIDAPI_LIB_DIR}/hidapi/hidapi.h
 )
-set(Sources ${CMAKE_SOURCE_DIR}/src/AdxIO4ButtonRing.cpp)
+set(Sources ${CMAKE_SOURCE_DIR}/src/UnityHidApiPlugin.cpp)
 add_library(${This} STATIC ${Sources} ${Headers} ${HIDAPI_SOURCES})
 
 # Link hidapi
