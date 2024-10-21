@@ -56,8 +56,8 @@ bool UnityHidApiPlugin::connect()
 }
 
 void UnityHidApiPlugin::read(
-    std::function<void(const uint8_t *, size_t)> dataCallback,
-    std::function<void()> errorCallback)
+    std::function<void(const uint8_t *)> dataCallback,
+    std::function<void(std::string)> errorCallback)
 {
     if (!device)
     {
@@ -73,8 +73,8 @@ void UnityHidApiPlugin::read(
 }
 
 void UnityHidApiPlugin::readLoop(
-    std::function<void(const uint8_t *, size_t)> dataCallback,
-    std::function<void()> eventCallback)
+    std::function<void(const uint8_t *)> dataCallback,
+    std::function<void(std::string)> eventCallback)
 {
     hid_device *rawDevice = device.get();
     uint8_t *rawBuffer = buffer.get();
@@ -83,7 +83,7 @@ void UnityHidApiPlugin::readLoop(
 
     if (!rawDevice || !rawBuffer || !prevState)
     {
-        eventCallback();
+        eventCallback("Buffers were not instantiated there is something wrong with the plugin");
         return;
     }
 
@@ -102,18 +102,17 @@ void UnityHidApiPlugin::readLoop(
             // If the data equals previous state no processing required
             if (0 == std::memcmp(rawBuffer, prevState, bytesRead))
             {
-                // prevent blocking
-                std::this_thread::sleep_for(std::chrono::milliseconds(3));
+                // std::this_thread::sleep_for(std::chrono::milliseconds(3));
                 continue;
             }
 
             std::memcpy(prevState, rawBuffer, bytesRead);
-            dataCallback(rawBuffer, bytesRead);
+            dataCallback(rawBuffer);
         }
     }
     catch (...)
     {
-        eventCallback();
+        eventCallback("Error reading disconnected");
     }
     disconnect();
 }
@@ -137,6 +136,11 @@ bool UnityHidApiPlugin::disconnect()
 }
 
 bool UnityHidApiPlugin::isConnected()
+{
+    return nullptr != device.get();
+}
+
+bool UnityHidApiPlugin::isReading()
 {
     std::lock_guard<std::mutex> lock(connectionMutex);
     return reading.load();

@@ -21,10 +21,22 @@ add_subdirectory(${HIDAPI_LIB_DIR} ${CMAKE_CURRENT_BINARY_DIR}/hidapi)
 set(Headers
     ${CMAKE_SOURCE_DIR}/src/UnityHidApiPlugin.h
     ${CMAKE_SOURCE_DIR}/src/ConnectionProperties.h
+    ${CMAKE_SOURCE_DIR}/src/PluginWrapper.h
+    ${CMAKE_SOURCE_DIR}/src/ConnectionProperties.h
     ${HIDAPI_LIB_DIR}/hidapi/hidapi.h
 )
-set(Sources ${CMAKE_SOURCE_DIR}/src/UnityHidApiPlugin.cpp)
+set(Sources
+    ${CMAKE_SOURCE_DIR}/src/UnityHidApiPlugin.cpp
+    ${CMAKE_SOURCE_DIR}/src/PluginWrapper.cpp
+)
 add_library(${This} STATIC ${Sources} ${Headers} ${HIDAPI_SOURCES})
+
+# Disable /clr (Common Language Runtime) otherwise Unity callbacks will not work
+# Source: https://discussions.unity.com/t/communicating-c-with-c/445435/6
+if(MSVC)
+    target_compile_options(${This} PRIVATE /clr-) # Ensure /clr is disabled
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /D_UNICODE /DUNICODE")
+endif()
 
 # Link hidapi
 target_include_directories(${This} PRIVATE ${HIDAPI_LIB_DIR}/hidapi)

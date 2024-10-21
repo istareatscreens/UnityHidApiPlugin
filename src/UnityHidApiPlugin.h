@@ -27,8 +27,9 @@ private:
     std::mutex connectionMutex;
     const ConnectionProperties connectionProperties;
 
-    void readLoop(std::function<void(const uint8_t *, size_t)> dataCallback,
-                  std::function<void()> errorCallback);
+    void readLoop(
+        std::function<void(const uint8_t *)> dataCallback,
+        std::function<void(std::string)> errorCallback);
 
 public:
     UnityHidApiPlugin(int vender_id, int product_id, int buffer_size)
@@ -42,9 +43,10 @@ public:
     ~UnityHidApiPlugin();
 
     bool isConnected();
+    bool isReading();
     bool connect();
-    void read(std::function<void(const uint8_t *, size_t)> dataCallback,
-              std::function<void()> errorCallback);
+    void read(std::function<void(const uint8_t *)> dataCallback,
+              std::function<void(std::string)> errorCallback);
     bool disconnect();
 };
 
