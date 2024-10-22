@@ -84,6 +84,8 @@ void UnityHidApiPlugin::readLoop(
     hid_device *rawDevice = device.get();
     uint8_t *rawBuffer = buffer.get();
     uint8_t *prevState = previousBuffer.get();
+    // Apparently according to standard HID devices always
+    // return consistent packet sizes
     const size_t bufferSize = connectionProperties.buffer_size;
 
     if (!rawDevice || !rawBuffer || !prevState)
