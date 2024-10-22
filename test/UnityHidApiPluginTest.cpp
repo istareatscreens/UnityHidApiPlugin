@@ -14,7 +14,7 @@ public:
 TEST(UnityHidApiPluginTest, Connect_Success_Disconnect_Success)
 {
     ConnectionProperties connectionProperties;
-    UnityHidApiPlugin obj{connectionProperties.product_id, connectionProperties.vender_id, connectionProperties.buffer_size};
+    UnityHidApiPlugin obj{connectionProperties.product_id, connectionProperties.vendor_id, connectionProperties.buffer_size};
     auto result = obj.connect();
     std::this_thread::sleep_for(std::chrono::milliseconds(50)); // Allow some buffer time for the device to initialize
     EXPECT_TRUE(result) << "Expected successful connection to the HID device.";
@@ -27,7 +27,7 @@ TEST(UnityHidApiPluginTest, Connect_Success_Disconnect_Success)
 TEST(UnityHidApiPluginTest, Read_ValidData)
 {
     ConnectionProperties connectionProperties;
-    UnityHidApiPlugin obj{connectionProperties.product_id, connectionProperties.vender_id, connectionProperties.buffer_size};
+    UnityHidApiPlugin obj{connectionProperties.product_id, connectionProperties.vendor_id, connectionProperties.buffer_size};
     EXPECT_FALSE(obj.isConnected()) << "Expect device to be disconnected";
     EXPECT_TRUE(obj.connect());
     EXPECT_FALSE(obj.isReading()) << "Expect device to not be reading";

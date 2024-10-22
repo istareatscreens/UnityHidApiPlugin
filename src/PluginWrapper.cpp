@@ -1,37 +1,53 @@
 #include "PluginWrapper.h"
 #include "UnityHidApiPlugin.h"
 
-UnityHidApiPlugin *Initialize(int vender_id, int product_id, int buffer_size)
+extern "C"
 {
-    return nullptr;
-}
+    DLL_EXPORT UnityHidApiPlugin *Initialize(int vendor_id, int product_id, int buffer_size)
+    {
+        return new UnityHidApiPlugin(vendor_id, product_id, buffer_size);
+    }
 
-void Dispose(UnityHidApiPlugin *obj)
-{
-    obj->~UnityHidApiPlugin();
-}
+    DLL_EXPORT void Dispose(UnityHidApiPlugin *obj)
+    {
+        if (obj)
+        {
+            delete obj;
+        }
+    }
 
-bool Connect(UnityHidApiPlugin *obj)
-{
-    return obj->connect();
-}
+    DLL_EXPORT bool Connect(UnityHidApiPlugin *obj)
+    {
+        return obj->connect();
+    }
 
-void Read(UnityHidApiPlugin *obj, DataRecievedCallback data_recieved, EventCallback event_callback)
-{
-    obj->read(data_recieved, event_callback);
-}
+    DLL_EXPORT void Read(UnityHidApiPlugin *obj, DataRecievedCallback data_recieved, EventCallback event_callback)
+    {
+        obj->read(
+            [data_recieved](const uint8_t *data)
+            { data_recieved(data); },
+            [event_callback](std::string error)
+            { event_callback(error); });
+    }
 
-bool Disconnect(UnityHidApiPlugin *obj)
-{
-    return obj->disconnect();
-}
+    DLL_EXPORT bool Disconnect(UnityHidApiPlugin *obj)
+    {
+        return obj->disconnect();
+    }
 
-bool IsConnected(UnityHidApiPlugin *obj)
-{
-    return obj->isConnected();
-}
+    DLL_EXPORT bool IsConnected(UnityHidApiPlugin *obj)
+    {
+        return obj->isConnected();
+    }
 
-bool IsReading(UnityHidApiPlugin *obj)
-{
-    return obj->isReading();
+    DLL_EXPORT bool IsReading(UnityHidApiPlugin *obj)
+    {
+        return obj->isReading();
+    }
+
+    // Use to test if Unity is correctly loading the plugin
+    DLL_EXPORT int PluginLoaded()
+    {
+        return 1;
+    }
 }

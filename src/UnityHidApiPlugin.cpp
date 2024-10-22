@@ -8,12 +8,12 @@ bool UnityHidApiPlugin::connect()
     clearBuffers();
 
     // Attempt to open the HID device using the vendor and product IDs
-    // hid_device *raw_device = hid_open(connection_properties.vender_id, connection_properties.product_id, nullptr);
+    // hid_device *raw_device = hid_open(connection_properties.vendor_id, connection_properties.product_id, nullptr);
 
     // windows often installs duplicate drivers for some reason
     // so we need to find the correct device out of potential duplicates
 
-    auto devices_info_linked_list = hid_enumerate(connectionProperties.vender_id, connectionProperties.product_id);
+    auto devices_info_linked_list = hid_enumerate(connectionProperties.vendor_id, connectionProperties.product_id);
     if (nullptr == devices_info_linked_list)
     {
         return false;

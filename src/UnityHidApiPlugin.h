@@ -1,12 +1,6 @@
 #ifndef ADXIO4BUTTONRING_H
 #define ADXIO4BUTTONRING_H
 
-#ifdef _WIN32
-#define DLL_EXPORT __declspec(dllexport)
-#else
-#define DLL_EXPORT
-#endif
-
 #include <memory>
 #include <functional>
 #include <thread>
@@ -15,6 +9,12 @@
 #include <mutex>
 #include "../library/hidapi/hidapi/hidapi.h"
 #include "ConnectionProperties.h"
+
+#ifdef _WIN32
+#define DLL_EXPORT __declspec(dllexport)
+#else
+#define DLL_EXPORT
+#endif
 
 class DLL_EXPORT UnityHidApiPlugin
 {
@@ -33,9 +33,9 @@ private:
     void clearBuffers();
 
 public:
-    UnityHidApiPlugin(int vender_id, int product_id, int buffer_size)
+    UnityHidApiPlugin(int vendor_id, int product_id, int buffer_size)
         : device(nullptr, hid_close), reading(false),
-          connectionProperties{vender_id, product_id, buffer_size}
+          connectionProperties{vendor_id, product_id, buffer_size}
     {
         buffer = std::make_unique<uint8_t[]>(buffer_size);
         previousBuffer = std::make_unique<uint8_t[]>(buffer_size);

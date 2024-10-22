@@ -1,0 +1,10 @@
+LIBRARY UnityHidApiPlugin
+EXPORTS
+    Initialize
+    Dispose
+    Connect
+    Read
+    Disconnect
+    IsConnected
+    IsReading
+    PluginLoaded
