@@ -23,13 +23,14 @@ private:
     std::atomic<bool> reading; // Used to control the read loop
     std::thread readThread;
     std::unique_ptr<uint8_t[]> buffer;
-    std::unique_ptr<uint8_t[]> previousState;
+    std::unique_ptr<uint8_t[]> previousBuffer;
     std::mutex connectionMutex;
     const ConnectionProperties connectionProperties;
 
     void readLoop(
         std::function<void(const uint8_t *)> dataCallback,
         std::function<void(std::string)> errorCallback);
+    void clearBuffers();
 
 public:
     UnityHidApiPlugin(int vender_id, int product_id, int buffer_size)
@@ -37,7 +38,7 @@ public:
           connectionProperties{vender_id, product_id, buffer_size}
     {
         buffer = std::make_unique<uint8_t[]>(buffer_size);
-        previousState = std::make_unique<uint8_t[]>(buffer_size);
+        previousBuffer = std::make_unique<uint8_t[]>(buffer_size);
     }
 
     ~UnityHidApiPlugin();

@@ -4,6 +4,8 @@
 
 bool UnityHidApiPlugin::connect()
 {
+    // clear buffers to prevent side effects
+    clearBuffers();
 
     // Attempt to open the HID device using the vendor and product IDs
     // hid_device *raw_device = hid_open(connection_properties.vender_id, connection_properties.product_id, nullptr);
@@ -64,6 +66,9 @@ void UnityHidApiPlugin::read(
         return;
     }
 
+    // clear buffers to prevent side effects
+    clearBuffers();
+
     reading.store(true);
 
     // Start the read loop in a separate thread to avoid blocking
@@ -78,7 +83,7 @@ void UnityHidApiPlugin::readLoop(
 {
     hid_device *rawDevice = device.get();
     uint8_t *rawBuffer = buffer.get();
-    uint8_t *prevState = previousState.get();
+    uint8_t *prevState = previousBuffer.get();
     const size_t bufferSize = connectionProperties.buffer_size;
 
     if (!rawDevice || !rawBuffer || !prevState)
@@ -115,6 +120,12 @@ void UnityHidApiPlugin::readLoop(
         eventCallback("Error reading disconnected");
     }
     disconnect();
+}
+
+void UnityHidApiPlugin::clearBuffers()
+{
+    buffer.reset(new uint8_t[connectionProperties.buffer_size]);
+    previousBuffer.reset(new uint8_t[connectionProperties.buffer_size]);
 }
 
 bool UnityHidApiPlugin::disconnect()
