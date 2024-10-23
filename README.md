@@ -15,12 +15,36 @@ add_custom_command(TARGET ${This} POST_BUILD
     COMMENT "Copying AdxHIDButtonRing.dll to Project Plugins directory and replacing the existing file and removing Debug"
 )
 ```
+
 Make sure to pull the external dependencies before building:
 
 ```shell
 git pull --recurse-submodules
 ```
 
+## Debugging
+
+### Debugging with tests:
+
+Make sure the change the add_library argument to STATIC (in ./CMakeLists.txt) and comment out the POST_BUILD command (if using unity at the same time due to file lock)
+
+### Validating API symbols are non mangled and present
+
+If you have problems connecting to the plugin in Unity ensure that the symbols exist, you can use dumpbin.exe Provided as tools with Visaul Studio (Typical path: `C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\<Your Version>\bin\Hostx64\x64 `). For example:
+
+```
+.\dumpbin.exe /export <path to UnityHidApiPlugin.dll>
+```
+
+You should see non-mangled function names present in the output from this command. Ensure that the add_library argument in (./CMakeLists.txt) is set to SHARED.
+
 ## Usage
 
 WIP
+
+## Refernces
+
+- [CMake Setup](https://www.youtube.com/watch?v=Lp1ifh9TuFI)
+- [Debugging With CMake and VSCode](https://www.youtube.com/watch?v=OUAuqw3QgeE)
+- [C++ Unity Plugin Documentation](https://www.mono-project.com/docs/advanced/pinvoke/)
+- [hidapi Example](https://www.codeproject.com/KB/DLL/XDllPt3.aspx)

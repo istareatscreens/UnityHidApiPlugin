@@ -25,10 +25,6 @@ bool UnityHidApiPlugin::connect()
         // try to read from the device
         // Set non-blocking mode for the device
         raw_device = hid_open_path(devices_info_linked_list->path);
-        if (hid_set_nonblocking(raw_device, 1) < 0)
-        {
-            // TODO: Non blocking isn't supported well this is awkward potential issues with some devices
-        }
 
         // Do a read to make sure the device is actually connected
         int bytesRead = hid_read(raw_device, buffer.get(), connectionProperties.buffer_size);
@@ -49,6 +45,11 @@ bool UnityHidApiPlugin::connect()
     {
         // no device connected
         return false;
+    }
+
+    if (hid_set_nonblocking(raw_device, 1) < 0)
+    {
+        // TODO: Non blocking isn't supported well this is awkward potential issues with some devices
     }
 
     // Store the device in the unique pointer
@@ -107,7 +108,7 @@ void UnityHidApiPlugin::readLoop(
             }
 
             // If the data equals previous state no processing required
-            if (0 == std::memcmp(rawBuffer, prevState, bytesRead))
+            if (0 == bytesRead || 0 == std::memcmp(rawBuffer, prevState, bytesRead))
             {
                 // std::this_thread::sleep_for(std::chrono::milliseconds(3));
                 continue;

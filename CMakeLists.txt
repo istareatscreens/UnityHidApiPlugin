@@ -32,6 +32,8 @@ set(Sources
     ${CMAKE_SOURCE_DIR}/src/UnityHidApiPlugin.cpp
     ${CMAKE_SOURCE_DIR}/src/PluginWrapper.cpp
 )
+
+# Note: For testing/debugging set this to STATIC, for output to unity set it to SHARED
 add_library(${This} SHARED ${Sources} ${Headers} ${HIDAPI_SOURCES})
 
 # Disable /clr (Common Language Runtime) otherwise Unity callbacks will not work
@@ -68,11 +70,12 @@ set_target_properties(${This} PROPERTIES
 )
 
 # Copy library to unity and clean it up
+# Note for testing comment this out (Unity will often lock the output file)
 add_custom_command(TARGET ${This} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E remove "${OUTPUT_DIR}/${This}.dll"
     COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:${This}>" "${OUTPUT_DIR}/${This}.dll"
-    COMMAND ${CMAKE_COMMAND} -E remove_directory "${OUTPUT_DIR}/Debug"
     COMMAND ${CMAKE_COMMAND} -E remove_directory "${OUTPUT_DIR}/Release"
+    COMMAND ${CMAKE_COMMAND} -E remove_directory "${OUTPUT_DIR}/Debug"
     COMMENT "Copying AdxHIDButtonRing.dll to Project Plugins directory and replacing the existing file and removing Debug"
 )
 
