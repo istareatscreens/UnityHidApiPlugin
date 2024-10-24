@@ -87,6 +87,7 @@ void UnityHidApiPlugin::readLoop(
     hid_device *raw_device = device.get();
     uint8_t *raw_buffer = buffer.get();
     uint8_t *previous_state = previousBuffer.get();
+    uint8_t *external_buffer = externalBuffer.get();
     // According to standard HID devices always
     // return consistent packet sizes (I could be wrong)
     const size_t bufferSize = connectionProperties.buffer_size;
@@ -128,8 +129,9 @@ void UnityHidApiPlugin::readLoop(
             }
 
             std::memcpy(previous_state, data_to_process, bytes_to_read);
+            std::memcpy(external_buffer, data_to_process, bytes_to_read);
             // the caller must store how many bytes they chose to read
-            dataCallback(data_to_process);
+            dataCallback(external_buffer);
         }
     }
     catch (...)
@@ -142,7 +144,8 @@ void UnityHidApiPlugin::readLoop(
 void UnityHidApiPlugin::clearBuffers()
 {
     buffer.reset(new uint8_t[connectionProperties.buffer_size]);
-    previousBuffer.reset(new uint8_t[connectionProperties.buffer_size]);
+    previousBuffer.reset(new uint8_t[connectionProperties.bytes_to_read]);
+    externalBuffer.reset(new uint8_t[connectionProperties.bytes_to_read]);
 }
 
 bool UnityHidApiPlugin::disconnect()

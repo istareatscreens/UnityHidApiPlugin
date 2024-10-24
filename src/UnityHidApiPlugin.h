@@ -24,6 +24,7 @@ private:
     std::thread readThread;
     std::unique_ptr<uint8_t[]> buffer;
     std::unique_ptr<uint8_t[]> previousBuffer;
+    std::unique_ptr<uint8_t[]> externalBuffer;
     std::mutex connectionMutex;
     const ConnectionProperties connectionProperties;
 
@@ -49,6 +50,7 @@ public:
     {
         buffer = std::make_unique<uint8_t[]>(buffer_size);
         previousBuffer = std::make_unique<uint8_t[]>(bytes_to_read);
+        externalBuffer = std::make_unique<uint8_t[]>(bytes_to_read);
     }
 
     ~UnityHidApiPlugin();
