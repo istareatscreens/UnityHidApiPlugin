@@ -12,11 +12,15 @@
 #define DLL_EXPORT
 #endif
 
+#include <vector>
+#include <memory>
 #include "UnityHidApiPlugin.h"
 
 // Declare callback
 typedef int(__stdcall *DataRecievedCallback)(const uint8_t *);
 typedef int(__stdcall *EventCallback)(std::string);
+
+typedef std::unique_ptr<UnityHidApiPlugin> PluginPtr;
 
 extern "C"
 {
@@ -41,6 +45,7 @@ extern "C"
   extern DLL_EXPORT bool IsConnected(UnityHidApiPlugin *obj);
   extern DLL_EXPORT bool IsReading(UnityHidApiPlugin *obj);
   extern DLL_EXPORT int PluginLoaded();
+  extern DLL_EXPORT void ReloadPlugin();
 }
 
 #endif // __PLUGIN_WRAPPER_H

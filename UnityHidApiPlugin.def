@@ -8,3 +8,4 @@ EXPORTS
     IsConnected
     IsReading
     PluginLoaded
+    ReloadPlugin
