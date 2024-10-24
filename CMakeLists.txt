@@ -34,6 +34,7 @@ set(Sources
 )
 
 # Note: For testing/debugging set this to STATIC, for output to unity set it to SHARED
+# add_library(${This} STATIC ${Sources} ${Headers} ${HIDAPI_SOURCES})
 add_library(${This} SHARED ${Sources} ${Headers} ${HIDAPI_SOURCES})
 
 # Disable /clr (Common Language Runtime) otherwise Unity callbacks will not work

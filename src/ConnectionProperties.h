@@ -20,11 +20,12 @@ struct ConnectionProperties
 {
   int vendor_id = 0x0CA3;
   int product_id = 0x0021;
-  // zero index inclusive [1, 4] in a bit string of 00000 would truncate 0000
-  // Going outside of bounds is not allowed!
-  int read_left = 0;
-  int read_right = 0;
+  // This will truncate the returned by left_bytes_to_truncate and impact how
+  // previous buffer is compared to current buffer.
+  // Warning bytes_to_read + left_bytes_to_truncate <= buffer_size
   int buffer_size = 64;
+  int left_bytes_to_truncate = 0;
+  int bytes_to_read = 64;
   int polling_rate_ms = -1; // not implemented
 };
 

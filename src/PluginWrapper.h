@@ -25,7 +25,9 @@ extern "C"
   extern DLL_EXPORT UnityHidApiPlugin *Initialize(
       int vendor_id,
       int product_id,
-      int buffer_size
+      int buffer_size,
+      int left_bytes_to_truncate,
+      int bytes_to_read
 
   );
 

@@ -3,9 +3,23 @@
 
 extern "C"
 {
-    DLL_EXPORT UnityHidApiPlugin *Initialize(int vendor_id, int product_id, int buffer_size)
+    DLL_EXPORT UnityHidApiPlugin *Initialize(
+        int vendor_id,
+        int product_id,
+        int buffer_size,
+        int left_byes_to_truncate,
+        int bytes_to_read
+
+    )
     {
-        return new UnityHidApiPlugin(vendor_id, product_id, buffer_size);
+        return new UnityHidApiPlugin(
+            vendor_id,
+            product_id,
+            buffer_size,
+            left_byes_to_truncate,
+            bytes_to_read
+
+        );
     }
 
     DLL_EXPORT void Dispose(UnityHidApiPlugin *obj)

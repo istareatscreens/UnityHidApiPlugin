@@ -33,12 +33,22 @@ private:
     void clearBuffers();
 
 public:
-    UnityHidApiPlugin(int vendor_id, int product_id, int buffer_size)
+    UnityHidApiPlugin(
+        const int vendor_id,
+        const int product_id,
+        const int buffer_size,
+        const int left_bytes_to_truncate = 0,
+        const int bytes_to_read = -1)
         : device(nullptr, hid_close), reading(false),
-          connectionProperties{vendor_id, product_id, buffer_size}
+          connectionProperties{
+              vendor_id,
+              product_id,
+              buffer_size,
+              left_bytes_to_truncate,
+              bytes_to_read == -1 ? buffer_size : bytes_to_read}
     {
         buffer = std::make_unique<uint8_t[]>(buffer_size);
-        previousBuffer = std::make_unique<uint8_t[]>(buffer_size);
+        previousBuffer = std::make_unique<uint8_t[]>(bytes_to_read);
     }
 
     ~UnityHidApiPlugin();
