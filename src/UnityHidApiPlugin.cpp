@@ -137,8 +137,8 @@ void UnityHidApiPlugin::readLoop(
     catch (...)
     {
         eventCallback("An error occured while reading disconnecting...");
+        disconnect();
     }
-    disconnect();
 }
 
 void UnityHidApiPlugin::clearBuffers()
@@ -150,17 +150,7 @@ void UnityHidApiPlugin::clearBuffers()
 
 bool UnityHidApiPlugin::disconnect()
 {
-    if (reading.load())
-    {
-        // stop reading and kill thread
-        reading.store(false);
-
-        if (readThread.joinable())
-        {
-            readThread.join();
-        }
-    }
-
+    stopReading();
     device.reset();
 
     return true;
@@ -175,6 +165,19 @@ bool UnityHidApiPlugin::isReading()
 {
     std::lock_guard<std::mutex> lock(connectionMutex);
     return reading.load();
+}
+
+void UnityHidApiPlugin::stopReading()
+{
+    if (reading.load())
+    {
+        // stop reading and kill thread
+        reading.store(false);
+        if (readThread.joinable())
+        {
+            readThread.join();
+        }
+    }
 }
 
 UnityHidApiPlugin::~UnityHidApiPlugin()

@@ -44,6 +44,7 @@ extern "C"
   extern DLL_EXPORT bool Disconnect(UnityHidApiPlugin *obj);
   extern DLL_EXPORT bool IsConnected(UnityHidApiPlugin *obj);
   extern DLL_EXPORT bool IsReading(UnityHidApiPlugin *obj);
+  extern DLL_EXPORT void StopReading(UnityHidApiPlugin *obj);
   extern DLL_EXPORT int PluginLoaded();
   extern DLL_EXPORT void ReloadPlugin();
 }

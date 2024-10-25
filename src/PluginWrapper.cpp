@@ -102,6 +102,15 @@ extern "C"
         return obj->isReading();
     }
 
+    DLL_EXPORT void StopReading(UnityHidApiPlugin *obj)
+    {
+        if (!obj)
+        {
+            return;
+        }
+        obj->stopReading();
+    }
+
     // Use to test if Unity is correctly loading the plugin
     DLL_EXPORT int PluginLoaded()
     {

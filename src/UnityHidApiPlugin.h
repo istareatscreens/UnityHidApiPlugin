@@ -57,6 +57,7 @@ public:
 
     bool isConnected();
     bool isReading();
+    void stopReading();
     bool connect();
     void read(std::function<void(const uint8_t *)> dataCallback,
               std::function<void(std::string)> errorCallback);

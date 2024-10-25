@@ -9,3 +9,4 @@ EXPORTS
     IsReading
     PluginLoaded
     ReloadPlugin
+    StopReading
