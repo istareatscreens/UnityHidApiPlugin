@@ -28,6 +28,18 @@ git pull --recurse-submodules
 
 Make sure the change the add_library argument to STATIC (in ./CMakeLists.txt) and comment out the POST_BUILD command (if using unity at the same time due to file lock)
 
+You also need to change static linking of msvc runtime to debug mode. So change the following line
+
+```
+   target_compile_options(${This} PRIVATE /clr- /MT)
+```
+
+To
+
+```
+    target_compile_options(${This} PRIVATE /clr- /MD)
+```
+
 ### Validating API symbols are non mangled and present
 
 If you have problems connecting to the plugin in Unity ensure that the symbols exist, you can use dumpbin.exe Provided as tools with Visaul Studio (Typical path: `C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\<Your Version>\bin\Hostx64\x64 `). For example:

@@ -46,10 +46,17 @@ set_target_properties(UnityHidApiPlugin PROPERTIES
     LINK_FLAGS "/DEF:${CMAKE_CURRENT_SOURCE_DIR}/UnityHidApiPlugin.def"
 )
 
+set(CMAKE_VERBOSE_MAKEFILE ON)
+
 if(MSVC)
-    target_compile_options(${This} PRIVATE /clr-) # Ensure /clr is disabled
+    # Statically link MVSC runtime
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /D_UNICODE /DUNICODE")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /clr-") # Ensure C files don't get /clr
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+
+    # Need to disable /clr for unity plugin to work
+    # Need to statically link MVSC runtime
+    # For Debugging change flag /MT to /MD
+    target_compile_options(${This} PRIVATE /clr- /MT)
 endif()
 
 # Link hidapi
