@@ -17,7 +17,7 @@
 #include "UnityHidApiPlugin.h"
 
 // Declare callback
-typedef int(__stdcall *DataRecievedCallback)(const uint8_t *);
+typedef int(__stdcall *DataReceivedCallback)(const uint8_t *);
 typedef int(__stdcall *EventCallback)(std::string);
 
 typedef std::unique_ptr<UnityHidApiPlugin> PluginPtr;
@@ -27,6 +27,7 @@ extern "C"
 
   // instantiation
   extern DLL_EXPORT UnityHidApiPlugin *Initialize(
+      int device_classification,
       int vendor_id,
       int product_id,
       int buffer_size,
@@ -39,7 +40,7 @@ extern "C"
   extern DLL_EXPORT void Dispose(UnityHidApiPlugin *obj);
   extern DLL_EXPORT bool Connect(UnityHidApiPlugin *obj);
   extern DLL_EXPORT void Read(UnityHidApiPlugin *obj,
-                              DataRecievedCallback data_recieved,
+                              DataReceivedCallback data_received,
                               EventCallback event_callback);
   extern DLL_EXPORT bool Disconnect(UnityHidApiPlugin *obj);
   extern DLL_EXPORT bool IsConnected(UnityHidApiPlugin *obj);

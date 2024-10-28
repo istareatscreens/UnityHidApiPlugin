@@ -169,6 +169,7 @@ bool UnityHidApiPlugin::isReading()
 
 void UnityHidApiPlugin::stopReading()
 {
+    std::lock_guard<std::mutex> lock(connectionMutex);
     if (reading.load())
     {
         // stop reading and kill thread

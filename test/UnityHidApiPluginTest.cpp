@@ -84,6 +84,7 @@ TEST(UnityHidApiPlugin, Test_Creation_Of_UnityHidApiPlugin_And_Connection_Throug
 {
     ConnectionProperties ConnectionProperties;
     auto objPtr = Initialize(
+        0,
         ConnectionProperties.vendor_id,
         ConnectionProperties.product_id,
         ConnectionProperties.buffer_size,

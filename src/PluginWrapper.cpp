@@ -1,33 +1,60 @@
 #include "PluginWrapper.h"
 #include "UnityHidApiPlugin.h"
+#include <mutex>
 
-static std::vector<PluginPtr> &getPluginInstances()
+static std::vector<UnityHidApiPlugin *> &getPluginInstances()
 {
-    static std::vector<PluginPtr> pluginInstances;
+    static std::vector<UnityHidApiPlugin *> pluginInstances;
     return pluginInstances;
+}
+
+// Using a map was causing runtime crashes so switched to array
+static std::vector<int> &getDeviceClassifications()
+{
+    static std::vector<int> deviceClassifications;
+    return deviceClassifications;
 }
 
 extern "C"
 {
     DLL_EXPORT UnityHidApiPlugin *Initialize(
+        int device_classification,
         int vendor_id,
         int product_id,
         int buffer_size,
         int left_bytes_to_truncate,
         int bytes_to_read)
     {
+        auto &pluginInstances = getPluginInstances();
+        auto &deviceClassifications = getDeviceClassifications();
+
+        for (size_t i = 0; i < deviceClassifications.size(); i++)
+        {
+            if (deviceClassifications[i] != device_classification)
+            {
+                continue;
+            }
+            UnityHidApiPlugin *plugin = pluginInstances[i];
+            if (!plugin)
+            {
+                break;
+            }
+            plugin->stopReading();
+            return plugin;
+        }
+
         // Create new instance and store it in the smart pointer array
-        PluginPtr newPlugin = std::make_unique<UnityHidApiPlugin>(
+        auto newPlugin = new UnityHidApiPlugin(
             vendor_id,
             product_id,
             buffer_size,
             left_bytes_to_truncate,
             bytes_to_read);
 
-        UnityHidApiPlugin *pluginRawPtr = newPlugin.get();
-        getPluginInstances().push_back(std::move(newPlugin));
+        getPluginInstances().push_back(newPlugin);
+        getDeviceClassifications().push_back(device_classification);
 
-        return pluginRawPtr;
+        return newPlugin;
     }
 
     DLL_EXPORT void Dispose(UnityHidApiPlugin *obj)
@@ -38,17 +65,21 @@ extern "C"
         }
 
         auto &pluginInstances = getPluginInstances();
-        auto it = std::remove_if(pluginInstances.begin(), pluginInstances.end(),
-                                 [obj](const PluginPtr &plugin)
-                                 {
-                                     return plugin.get() == obj;
-                                 });
+        auto &deviceClassifications = getDeviceClassifications();
 
-        if (it != pluginInstances.end())
+        // Iterate over both pluginInstances and deviceClassifications simultaneously
+        for (size_t i = 0; i < pluginInstances.size(); ++i)
         {
-            pluginInstances.erase(it, pluginInstances.end());
+            if (pluginInstances[i] != obj)
+            {
+                continue;
+            }
+            pluginInstances.erase(pluginInstances.begin() + i);
+            deviceClassifications.erase(deviceClassifications.begin() + i);
+            return;
         }
     }
+
     DLL_EXPORT bool Connect(UnityHidApiPlugin *obj)
     {
         if (!obj)
@@ -58,7 +89,7 @@ extern "C"
         return obj->connect();
     }
 
-    DLL_EXPORT void Read(UnityHidApiPlugin *obj, DataRecievedCallback data_recieved, EventCallback event_callback)
+    DLL_EXPORT void Read(UnityHidApiPlugin *obj, DataReceivedCallback data_received, EventCallback event_callback)
     {
         if (!obj)
         {
@@ -66,8 +97,8 @@ extern "C"
         }
 
         obj->read(
-            [data_recieved](const uint8_t *data)
-            { data_recieved(data); },
+            [data_received](const uint8_t *data)
+            { data_received(data); },
             [event_callback](std::string error)
             { event_callback(error); });
     }
