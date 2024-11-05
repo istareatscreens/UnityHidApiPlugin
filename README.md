@@ -52,9 +52,9 @@ You should see non-mangled function names present in the output from this comman
 
 ## Usage
 
-You can use the following C# class to wrap this plugin [HERE](https://github.com/istareatscreens/MychIO/blob/a596661cba4d541f248779030497743804ec474b/Runtime/Connection/HID/UnityHidApiPlugin.cs#L6-L75)
+You can use the following C# class to wrap this plugin [HERE](https://github.com/istareatscreens/MychIO/blob/master/Runtime/Connection/HID/UnityHidApiPlugin.cs#L6-L75)
 
-An example instantiation of this plugin can be found [HERE](https://github.com/istareatscreens/MychIO/blob/a596661cba4d541f248779030497743804ec474b/Runtime/Connection/HID/HidDeviceConnection.cs#L14-L185):
+An example instantiation of this plugin can be found [HERE](https://github.com/istareatscreens/MychIO/blob/master/Runtime/Connection/HID/HidDeviceConnection.cs#L14-L185):
 
 ## Refernces
 
