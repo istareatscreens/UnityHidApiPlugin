@@ -26,10 +26,10 @@ bool UnityHidApiPlugin::connect()
         // Set non-blocking mode for the device
         raw_device = hid_open_path(devices_info_linked_list->path);
         // wait some time for connection to establish
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
         // Do a read to make sure the device is actually connected
         int bytesRead = hid_read(raw_device, buffer.get(), connectionProperties.buffer_size);
+        // std::this_thread::sleep_for(std::chrono::milliseconds(100));
         if (-1 != bytesRead)
         {
             // we got data
