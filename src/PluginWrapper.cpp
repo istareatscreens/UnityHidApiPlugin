@@ -23,7 +23,8 @@ extern "C"
         int product_id,
         int buffer_size,
         int left_bytes_to_truncate,
-        int bytes_to_read)
+        int bytes_to_read,
+        int polling_rate_ms)
     {
         auto &pluginInstances = getPluginInstances();
         auto &deviceClassifications = getDeviceClassifications();
@@ -49,7 +50,10 @@ extern "C"
             product_id,
             buffer_size,
             left_bytes_to_truncate,
-            bytes_to_read);
+            bytes_to_read,
+            polling_rate_ms
+
+        );
 
         getPluginInstances().push_back(newPlugin);
         getDeviceClassifications().push_back(device_classification);

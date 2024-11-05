@@ -32,9 +32,8 @@ extern "C"
       int product_id,
       int buffer_size,
       int left_bytes_to_truncate,
-      int bytes_to_read
-
-  );
+      int bytes_to_read,
+      int polling_rate_ms);
 
   // Need to passed intantiated object returned from Initialize to execute these function
   extern DLL_EXPORT void Dispose(UnityHidApiPlugin *obj);

@@ -26,7 +26,7 @@ struct ConnectionProperties
   int buffer_size = 64;
   int left_bytes_to_truncate = 0;
   int bytes_to_read = 64;
-  int polling_rate_ms = 0; // not implemented
+  int polling_rate_ms = 0;
 };
 
 #endif

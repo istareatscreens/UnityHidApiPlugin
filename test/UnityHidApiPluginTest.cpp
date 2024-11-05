@@ -22,7 +22,7 @@ TEST(UnityHidApiPluginTest, Connect_Success_Disconnect_Success)
         connectionProperties.buffer_size,
         0,
         connectionProperties.buffer_size = 64,
-    };
+        0};
     auto result = obj.connect();
     EXPECT_TRUE(result) << "Expected successful connection to the HID device.";
     EXPECT_TRUE(obj.isConnected()) << "Expected successful connection to the HID device.";
@@ -38,7 +38,8 @@ TEST(UnityHidApiPluginTest, Read_ValidData)
         connectionProperties.product_id,
         connectionProperties.buffer_size,
         0,
-        connectionProperties.buffer_size};
+        connectionProperties.buffer_size,
+        0};
     EXPECT_FALSE(obj.isConnected()) << "Expect device to be disconnected";
     EXPECT_TRUE(obj.connect());
     EXPECT_FALSE(obj.isReading()) << "Expect device to not be reading";
@@ -89,7 +90,8 @@ TEST(UnityHidApiPlugin, Test_Creation_Of_UnityHidApiPlugin_And_Connection_Throug
         ConnectionProperties.product_id,
         ConnectionProperties.buffer_size,
         0,
-        ConnectionProperties.buffer_size
+        ConnectionProperties.buffer_size,
+        0
 
     );
     EXPECT_NE(objPtr, nullptr);

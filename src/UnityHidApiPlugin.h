@@ -27,10 +27,12 @@ private:
     std::unique_ptr<uint8_t[]> externalBuffer;
     std::mutex connectionMutex;
     const ConnectionProperties connectionProperties;
-
     void readLoop(
-        std::function<void(const uint8_t *)> dataCallback,
-        std::function<void(std::string)> errorCallback);
+        const std::function<void(const uint8_t *)> dataCallback,
+        const std::function<void(std::string)> errorCallback);
+    void readLoopPolling(
+        const std::function<void(const uint8_t *)> dataCallback,
+        const std::function<void(std::string)> errorCallback);
     void clearBuffers();
 
 public:
@@ -39,14 +41,16 @@ public:
         const int product_id,
         const int buffer_size,
         const int left_bytes_to_truncate = 0,
-        const int bytes_to_read = -1)
+        const int bytes_to_read = -1,
+        const int polling_rate_ms = 0)
         : device(nullptr, hid_close), reading(false),
           connectionProperties{
               vendor_id,
               product_id,
               buffer_size,
               left_bytes_to_truncate,
-              bytes_to_read == -1 ? buffer_size : bytes_to_read}
+              bytes_to_read == -1 ? buffer_size : bytes_to_read,
+              polling_rate_ms}
     {
         buffer = std::make_unique<uint8_t[]>(buffer_size);
         previousBuffer = std::make_unique<uint8_t[]>(bytes_to_read);
