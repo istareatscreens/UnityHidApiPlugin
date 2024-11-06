@@ -114,7 +114,6 @@ void UnityHidApiPlugin::readLoopPolling(
     {
         while (reading.load(std::memory_order_relaxed))
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(polling_rate_ms));
 
             int bytesRead = hid_read(raw_device, raw_buffer, bufferSize);
 
@@ -143,6 +142,7 @@ void UnityHidApiPlugin::readLoopPolling(
             std::memcpy(external_buffer, data_to_process, bytes_to_read);
             // the caller must store how many bytes they chose to read
             dataCallback(external_buffer);
+            std::this_thread::sleep_for(std::chrono::milliseconds(polling_rate_ms));
         }
     }
     catch (...)
