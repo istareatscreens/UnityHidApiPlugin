@@ -11,8 +11,9 @@ Pull this into your Unity project in a directory named with a prefixed with "." 
 add_custom_command(TARGET ${This} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E remove "${OUTPUT_DIR}/${This}.dll"
     COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:${This}>" "${OUTPUT_DIR}/${This}.dll"
+    COMMAND ${CMAKE_COMMAND} -E remove_directory "${OUTPUT_DIR}/Release"
     COMMAND ${CMAKE_COMMAND} -E remove_directory "${OUTPUT_DIR}/Debug"
-    COMMENT "Copying AdxHIDButtonRing.dll to Project Plugins directory and replacing the existing file and removing Debug"
+    COMMENT "Copying UnityHidApiPlugin.dll to Project Plugins directory and replacing the existing file and removing Debug"
 )
 ```
 
