@@ -80,11 +80,15 @@ void UnityHidApiPlugin::read(
         readThread = std::thread(
             [this, dataCallback, errorCallback]()
             { readLoopPolling(dataCallback, errorCallback); });
+        HANDLE threadHandle = readThread.native_handle();
+        SetThreadPriority(threadHandle, THREAD_PRIORITY_HIGHEST);
         return;
     }
     readThread = std::thread(
         [this, dataCallback, errorCallback]()
         { readLoop(dataCallback, errorCallback); });
+    HANDLE threadHandle = readThread.native_handle();
+    SetThreadPriority(threadHandle, THREAD_PRIORITY_HIGHEST);
 }
 
 void UnityHidApiPlugin::readLoopPolling(

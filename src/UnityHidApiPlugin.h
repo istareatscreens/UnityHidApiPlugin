@@ -7,6 +7,7 @@
 #include <atomic>
 #include <vector>
 #include <mutex>
+#include <windows.h>
 #include "../library/hidapi/hidapi/hidapi.h"
 #include "ConnectionProperties.h"
 
